@@ -105,6 +105,7 @@ Usage: $programExec options
 
 	--help 						:: Show this message
 	--config  <config file> 			:: XML config file
+	--debug						:: Debug process
 ";
 
     echo $helpProgram;
@@ -125,6 +126,8 @@ function printMessage($message)
 // gets the data from a URL 
 function do_backup($configHost = array())
 {
+	global $debugprocess;
+
 	if (($configHost) && (is_array($configHost))) {
 
 		$host_address=$configHost['address'];
@@ -156,10 +159,11 @@ function do_backup($configHost = array())
 
 		// debug
 		// display communication with server
-		curl_setopt($ch, CURLOPT_VERBOSE, true);
-
-		//$fp = fopen("debug.tmp", "w");
-		//curl_setopt($ch, CURLOPT_STDERR, $fp);
+		if ($debugprocess) {
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			//$fp = fopen("debug.tmp", "w");
+			//curl_setopt($ch, CURLOPT_STDERR, $fp);
+		}
 
 		if ($host_protocol == 'https') {
 			//check if certificate is valid
@@ -258,6 +262,10 @@ if( $totalArgv > 1 ) {
 		switch($argv[$param]) {
 			case '--help':
 				showHelp();
+			break;
+
+			case '--debug':
+				$debugprocess = true;
 			break;
 
 			case '--config':
