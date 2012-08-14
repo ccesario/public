@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 <backup>
-  <backupdir>/tmp/backuptemp</backupdir>
-  <logdir>/tmp/backuptemp/logs</logdir>
+  <general>
+    <backupdir>/data/backupPfsense</backupdir>
+    <logdir>/data/backupPfsense/logs</logdir>
+  </general>
   <host>
     <enabled>true</enabled>
     <hostname>host1</hostname>
