@@ -338,7 +338,7 @@ else {
 				createLog("SUCCESS: ${hostcfg['hostname']} - ${hostcfg['address']} - ${backupdir}",$globalcfg['logdir']);
 			}
 			else {
-				echo date('[D M j G:i:s]')." ${backup['error']} - ${backupdir}\n";
+				echo date('[D M j G:i:s]')." ${backup['error']}\n";
 				createLog("${backup['error']}",$globalcfg['logdir']);
 			}
 		}
