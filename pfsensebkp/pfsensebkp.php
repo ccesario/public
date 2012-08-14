@@ -256,7 +256,7 @@ $totalArgv = count($argv);
 if( $totalArgv > 1 ) {
 	for( $param = 1; $param < $totalArgv; $param++ ) {
 		switch($argv[$param]) {
-			case '--verbose':
+			case '--help':
 				showHelp();
 			break;
 
