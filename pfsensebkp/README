@@ -42,5 +42,5 @@ USAGE
 
 		php pfsensebkp.php --config config.xml
 
-	- The log files are stored in the directories specified in the configuration file.
+	- The log and backup files are stored in the directories specified in the configuration file.
 	- Make sure you have permission to read and write in backupdir and logdir directories.
