@@ -35,7 +35,7 @@
  * Program variables
 */
 $programExec 		= basename($_SERVER['argv'][0]);
-$programVersion 	= "0.0001 beta";
+$programVersion 	= "0.1-beta 08-2012";
 $programAuthor 		= "Carlos Cesario <carloscesario@gmail.com>";
 $programName		= "pfsensebkp";	
 
