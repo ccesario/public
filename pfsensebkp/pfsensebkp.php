@@ -188,13 +188,14 @@ function createBackup($configHost = array())
 
 		// login and set cookie
 		curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
+		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 
 		$data_file = curl_exec($ch);
 		$http_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);       
 
 		// check Sucesss
-		if (($data_file) && ($http_code == '302')) {
+		if ($http_code == '302') {
 				
 			// post params 
 			// get backup
