@@ -22,5 +22,14 @@
     <username>admin</username>
     <pass>passwords</pass>
   </host>
+  <host>
+	<enabled>false</enabled>
+	<hostname>host3</hostname>
+	<address>192.168.3.1</address>
+	<protocol>https</protocol>
+	<port>8080</port>
+	<username>admin</username>
+	<pass>password</pass>
+  </host>
 </backup>
 
