@@ -1,44 +1,53 @@
 <?php
+/* ========================================================================== */
 /*
-<?xml version="1.0" ?>
-<backup>
-  <general>
-    <backupdir>/tmp/backuptemp</backupdir>
-    <logdir>/tmp/backuptemp/logs</logdir>
-    <emailadmin/>
-    <smtpserver/>
-  </general>
-  <host>
-    <enabled>true</enabled>
-    <hostname>host1</hostname>
-    <address>192.168.1.1</address>
-    <protocol>http</protocol>
-    <port>8080</port>
-    <username>admin</username>
-    <pass>password</pass>
-  </host>
-</backup>
+        pfsensebkp.php
+        Copyright (C) 2012 Carlos Cesario - <carloscesario@gmail.com>
+        All rights reserved.
+                                                                              */
+/* ========================================================================== */
+/*
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+
+         1. Redistributions of source code must retain the above copyright notice,
+                this list of conditions and the following disclaimer.
+
+         2. Redistributions in binary form must reproduce the above copyright
+                notice, this list of conditions and the following disclaimer in the
+                documentation and/or other materials provided with the distribution.
+
+        THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES,
+        INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+        AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+        AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+        OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+        SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+        POSSIBILITY OF SUCH DAMAGE.
+                                                                              */
+/* ========================================================================== */
+
+
+/**
+ * Program variables
 */
-
-/* TODO
- - Tratar opcoes
- - Gerar Log - (ok parcial)
- - Definir local de backup (ok parcial)
- - Enviar email de notificacao (verificar realmente a necessidade)
- - Checar arquivo de configuracao antes de iniciar o backup (ok)
- - Possbilidade de executar tanto manual, quanto passando o arquivo de configuracao (opcoes via linha de comando)
- - Permitir opcoes de backup (nopackages, donotbackuprrd, restorearea)
-*/
-
-
 $programExec 		= basename($_SERVER['argv'][0]);
 $programVersion 	= "0.0001 beta";
 $programAuthor 		= "Carlos Cesario <carloscesario@gmail.com>";
 $programName		= "pfsensebkp";	
 
 
-// function to check PHP version 
-// Required is >= 5
+/**
+ * checkPhp()
+ * Function to check php version
+ * PHP Version >= 5 is required
+ *
+ * @param none
+ * @return none
+*/
 function checkPhp()
 {
 	if (version_compare(PHP_VERSION, '5.0.0', '<')) {
@@ -48,7 +57,13 @@ function checkPhp()
 }
 
 
-// Check if extension is loaded
+/**
+ * checkExtension()
+ * Function to check php extesions
+ *
+ * @param string $extName PHP Module
+ * @return boolean
+*/
 function checkExtension($extName)
 {
 	if (extension_loaded($extName)) {
@@ -60,7 +75,13 @@ function checkExtension($extName)
 }
 
 
-//Create and Check path
+/**
+ * checkPaths()
+ * Function to check/create paths
+ *
+ * @param string $pathName
+ * @return none
+*/
 function checkPaths($pathName)
 {
 	if ($pathName) {	
@@ -77,11 +98,19 @@ function checkPaths($pathName)
 	}
 }
 
-//Log 
+/**
+ * createLog()
+ * Function to create log file
+ *
+ * @param string $logMessage Message 
+ * @param string $logDir Directory to save logfile
+ * @return none
+*/
 function createLog($logMessage,$logDir)
 {
 	global $programName;
 	
+	//Check path specified 
 	checkPaths($logDir);
 
 	$datetime = date('[D M d G:i:s Y]');
@@ -93,7 +122,13 @@ function createLog($logMessage,$logDir)
 }
 
 
-// Show help
+/**
+ * showHelp()
+ * Function to print help menu in CLI
+ *
+ * @param none
+ * @return none
+*/
 function showHelp()
 {
 	global $programName, $programExec, $programVersion, $programAuthor;
@@ -113,8 +148,13 @@ Usage: $programExec options
 }
 
 
-
-// print messages in console
+/**
+ * printMessage()
+ * Function to print messages in CLI
+ *
+ * @param string $message
+ * @return none
+*/
 function printMessage($message)
 {
     echo "\n==============================================================================\n";
@@ -123,7 +163,14 @@ function printMessage($message)
 }
 
 
-// gets the data from a URL 
+/**
+ * createBackup()
+ * Function to create/get backup
+ * This function process the HTTP requests from PFSense servers
+ *
+ * @param array $configHost Data from XML file
+ * @return array $data
+*/
 function createBackup($configHost = array())
 {
 	global $debugprocess;
@@ -137,6 +184,7 @@ function createBackup($configHost = array())
 		$host_pass=$configHost['pass'];
 
 		$data = array();
+		$ckfile = '';
 		$data_file = '';
 		$http_url = '';
 		$http_code = '';
@@ -237,8 +285,9 @@ function createBackup($configHost = array())
 	}
 }
 
-
-// Main program
+/**
+ * Main program 
+*/
 
 // Verify PHP version
 checkPhp();
@@ -308,9 +357,7 @@ else {
 	$globalcfg['backupdir'] = strval($xml->general->backupdir); 
 	$globalcfg['logdir'] = strval($xml->general->logdir); 
 
-	//echo "BACKUP DIR " . $globalcfg['backupdir'];
 	checkPaths($globalcfg['backupdir']);
-
 
 	$hostcfg = array();
 
