@@ -15,8 +15,10 @@ USAGE
 
 		<?xml version="1.0" ?>
 		<backup>
-		  <backupdir>/data/backupPfsense</backupdir>
-		  <logdir>/data/backupPfsense/logs</logdir>
+		  <general>
+			<backupdir>/data/backupPfsense</backupdir>
+                  	<logdir>/data/backupPfsense/logs</logdir>
+ 		  </general>
 		  <host>
 			<enabled>true</enabled>
 			<hostname>host1</hostname>
