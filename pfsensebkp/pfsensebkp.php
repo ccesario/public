@@ -194,7 +194,7 @@ function createBackup($configHost = array())
 		$http_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);       
 
-		// check Sucesss
+		// check Success
 		if ($http_code == '302') {
 				
 			// post params 
@@ -211,7 +211,7 @@ function createBackup($configHost = array())
 			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
        
 
-			// check Sucesss
+			// check Success
 			if (($data_file) && ($http_code == '200')){
 				$data['backup'] = $data_file;
 			}
@@ -334,11 +334,11 @@ else {
 				$fp = fopen($backupdir.'/'.$hostcfg['address'].'-'.date("YmdHis").'.xml', 'w');
 				fwrite($fp, $backup['backup']);
 				fclose($fp);
-				echo "SUCESS: ${hostcfg['hostname']} \t- ${hostcfg['address']} - ${backupdir}\n";
-				createLog("SUCESS: ${hostcfg['hostname']} - ${hostcfg['address']} - ${backupdir}",$globalcfg['logdir']);
+				echo date('[D M j G:i:s]')." SUCCESS: ${hostcfg['hostname']} \t- ${hostcfg['address']} - ${backupdir}\n";
+				createLog("SUCCESS: ${hostcfg['hostname']} - ${hostcfg['address']} - ${backupdir}",$globalcfg['logdir']);
 			}
 			else {
-				echo "${backup['error']} - ${backupdir}\n";
+				echo date('[D M j G:i:s]')." ${backup['error']} - ${backupdir}\n";
 				createLog("${backup['error']}",$globalcfg['logdir']);
 			}
 		}
