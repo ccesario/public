@@ -124,7 +124,7 @@ function printMessage($message)
 
 
 // gets the data from a URL 
-function do_backup($configHost = array())
+function createBackup($configHost = array())
 {
 	global $debugprocess;
 
@@ -327,17 +327,18 @@ else {
 
 			$backupdir = $globalcfg['backupdir'].'/'.$hostcfg['hostname'];
 			checkPaths($backupdir);
-			$x = do_backup($hostcfg);
+			$backup = createBackup($hostcfg);
 
-			if (!$x['error']) {
+			if (!$backup['error']) {
 				$fp = fopen($backupdir.'/'.$hostcfg['address'].'-'.date("YmdHis").'.xml', 'w');
-				fwrite($fp, $x['backup']);
+				fwrite($fp, $backup['backup']);
 				fclose($fp);
-				createLog("SUCESS: ${hostcfg['hostname']} - ${hostcfg['address']}",$globalcfg['logdir']);
+				echo "SUCESS: ${hostcfg['hostname']} \t- ${hostcfg['address']} - ${backupdir}\n";
+				createLog("SUCESS: ${hostcfg['hostname']} - ${hostcfg['address']} - ${backupdir}",$globalcfg['logdir']);
 			}
 			else {
-				echo $x['error'];
-				createLog("${x['error']}",$globalcfg['logdir']);
+				echo "${backup['error']} - ${backupdir}\n";
+				createLog("${backup['error']}",$globalcfg['logdir']);
 			}
 		}
 	}
