@@ -48,9 +48,10 @@ USAGE:
 		  </host>
 		</backup>
 
-	- Save the the XML config file and to increase security, limit access to it: chmod 600 config.xml
-	- Run the main program and specify the XML config as below:
+	- Save the the XML config file and to increase security, limit access to it: 
+		chmod 600 config.xml
 
+	- Run the main program and specify the XML config as below:
 		php pfsensebkp.php --config config.xml
 
 	- The log and backup files are stored in the directories specified in the configuration file.
