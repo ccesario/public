@@ -188,7 +188,7 @@ function createBackup($configHost = array())
 		$data_file = '';
 		$http_url = '';
 		$http_code = '';
-		$error_flag='ERROR :';
+		$error_flag='ERROR  :';
 
 		$url="${host_protocol}://${host_address}:${host_port}/diag_backup.php";
 
