@@ -4,12 +4,12 @@ README
 	This is a simple program to backup pfsense config file - Versions (2.0.x and 2.1)
 
 
-REQUIREMENT
+REQUIREMENT:
 
 	PHP5-CLI with SimpleXML and Curl extensions.
 
 
-USAGE
+USAGE:
 
 	- Create a XML config file with the hosts data as example below:
 
@@ -48,7 +48,7 @@ USAGE
 		  </host>
 		</backup>
 
-	- Save the the XML config file.
+	- Save the the XML config file and to increase security, limit access to it: chmod 600 config.xml
 	- Run the main program and specify the XML config as below:
 
 		php pfsensebkp.php --config config.xml
