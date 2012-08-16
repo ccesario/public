@@ -17,7 +17,8 @@ USAGE:
 		<backup>
 		  <general>
 			<backupdir>/data/backupPfsense</backupdir>
-                  	<logdir>/data/backupPfsense/logs</logdir>
+            <logdir>/data/backupPfsense/logs</logdir>
+			<encryptpass>false</encryptpass>
  		  </general>
 		  <host>
 			<enabled>true</enabled>
@@ -56,3 +57,17 @@ USAGE:
 
 	- The log and backup files are stored in the directories specified in the configuration file.
 	- Make sure you have permission to read and write in backupdir and logdir directories.
+
+SECURITY:
+
+	To increase the security, is possible encrypt the password in XML config.
+	To this, enable the <encryptpass> tag in XML config and put the encrypted password in <tag> pass.
+
+	Run the main program with option --cryptpass 'My Secure password', copy the result and put in XML config.
+		php pfsensebkp.php --cryptpass 'my password'
+		
+	The output result is something like this
+		Encrypted password: $1$7fFnDe41$LiowNdQPx636dHZp9Y6Lf/WkhKdmQzTnpZWEFnZVcwPVpqSTBLakpqSkdJekttTTVKbU0z
+
+	See config-crypt.xml sample file to more details.
+
