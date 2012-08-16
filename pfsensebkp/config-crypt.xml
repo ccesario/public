@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<backup>
+  <general>
+    <backupdir>/data/backupPfsense</backupdir>
+    <logdir>/data/backupPfsense/logs</logdir>
+    <encryptpass>true</encryptpass>
+  </general>
+  <host>
+    <enabled>true</enabled>
+    <hostname>host1</hostname>
+    <address>192.168.1.1</address>
+    <protocol>http</protocol>
+    <port>8080</port>
+    <username>admin</username>
+    <pass>$1$l.2im5D7$KlH0yuEb26DMlrjuQKVQe0WkhKdmQzTnpZWEE9WmpJMEtqSmpKR0l6S21NNUptTTM=</pass>
+  </host>
+  <host>
+    <enabled>true</enabled>
+    <hostname>host2</hostname>
+    <address>192.168.2.1</address>
+    <protocol>https</protocol>
+    <port>443</port>
+    <username>admin</username>
+    <pass>$1$l.2im5D7$KlH0yuEb26DMlrjuQKVQe0WkhKdmQzTnpZWEE9WmpJMEtqSmpKR0l6S21NNUptTTM=</pass>
+  </host>
+  <host>
+    <enabled>false</enabled>
+    <hostname>host3</hostname>
+    <address>192.168.3.1</address>
+    <protocol>https</protocol>
+    <port>8080</port>
+    <username>admin</username>
+    <pass>$1$l.2im5D7$KlH0yuEb26DMlrjuQKVQe0WkhKdmQzTnpZWEE9WmpJMEtqSmpKR0l6S21NNUptTTM=</pass>
+  </host>
+</backup>
