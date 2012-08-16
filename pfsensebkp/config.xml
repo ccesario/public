@@ -3,6 +3,7 @@
   <general>
     <backupdir>/data/backupPfsense</backupdir>
     <logdir>/data/backupPfsense/logs</logdir>
+    <encryptpass>false</encryptpass>
   </general>
   <host>
     <enabled>true</enabled>
