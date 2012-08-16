@@ -39,6 +39,11 @@ $programVersion 	= "0.1-beta 08-2012";
 $programAuthor 		= "Carlos Cesario <carloscesario@gmail.com>";
 $programName		= "pfsensebkp";	
 
+/**
+ * CAUTION!!!!
+ * Do not change this if you already have encrypted passwords
+*/
+$privateKey			= 'f24*2c$b3*c9&c7';
 
 /**
  * checkPhp()
@@ -138,9 +143,11 @@ $programName $programVersion  -  $programAuthor
 
 Usage: $programExec options
 
-	--help 						:: Show this message
-	--config  <config file> 			:: XML config file
-	--debug						:: Debug process
+	--help                                  :: Show this message
+	--config       <config file>            :: XML config file
+	--debug                                 :: Debug backup process
+	--cryptpass   'the secure pass'         :: Encrypt password string - Used with <encryptpass> XML option
+	--decryptpass 'encrypted pass'          :: Decrypt encrypted password string
 ";
 
     echo $helpProgram;
@@ -160,6 +167,59 @@ function printMessage($message)
     echo "\n==============================================================================\n";
     echo " $message\n";
     echo "==============================================================================\n";
+}
+
+/**
+ * encryptStr()
+ * Function to crypt string
+ *
+ * @param string $strPlain
+ * @param global string $privateKey
+ * @return string
+*/
+function encryptStr($strPlain)
+{
+		global $privateKey;
+
+        $strCrypt = '';
+        $privateKeyCoded = base64_encode($privateKey);
+        $privateKeyCrypt = crypt($privateKey);
+        $strCrypt = strrev($strPlain);
+        $strCrypt = base64_encode($strCrypt);
+        $strCrypt = $strCrypt.$privateKeyCoded;
+        $strCrypt = base64_encode($strCrypt);
+        $strCrypt = $privateKeyCrypt.$strCrypt;
+        return $strCrypt;
+}
+
+
+/**
+ * decryptStr()
+ * Function to decrypt ecrypted string
+ *
+ * @param string $strCrypt
+ * @param global string $privateKey
+ * @return string
+*/
+function decryptStr($strCrypt)
+{
+		global $privateKey;
+
+        $strDecrypt = '';
+        $privateKeyCoded = base64_encode($privateKey);
+        $privateKeyCrypt = crypt($privateKey);
+        $strDecrypt = substr($strCrypt, strlen($privateKeyCrypt));
+        $strDecrypt = base64_decode($strDecrypt);
+        $strDecrypt = str_replace($privateKeyCoded,"",$strDecrypt);
+        $strDecrypt = base64_decode($strDecrypt);
+        $strDecrypt = strrev($strDecrypt);
+
+		if ($strDecrypt != '') {     
+			return $strDecrypt;
+		}
+		else {
+			return '[ERROR]';
+		}
 }
 
 
@@ -330,6 +390,30 @@ if( $totalArgv > 1 ) {
 			$debugprocess = true;
 		break;
 
+		case '--cryptpass':
+			if (!$argv[($param + 1)]) {
+				printMessage("--cryptpass   'the secure pass' ");
+				exit(1);
+			}
+			else {
+				$cryptpass = encryptStr($argv[($param + 1)]);
+				echo "Encrypted password: " . $cryptpass . "\n";
+				exit(0);
+			}
+		break;
+
+		case '--decryptpass':
+			if (!$argv[($param + 1)]) {
+				printMessage("--decryptpass 'encrypted pass'");
+				exit(1);
+			}
+			else {
+				$decryptpass = decryptStr($argv[($param + 1)]);
+				echo "Decrypted password: " . $decryptpass . "\n";
+				exit(0);
+			}
+		break;
+
 		default:
 			showHelp();
 		break;
@@ -355,7 +439,8 @@ if (!$xml) {
 else {
 	$globalcfg = array();
 	$globalcfg['backupdir'] = strval($xml->general->backupdir); 
-	$globalcfg['logdir'] = strval($xml->general->logdir); 
+	$globalcfg['logdir'] = strval($xml->general->logdir);
+	$globalcfg['encryptpass'] = strval($xml->general->encryptpass);  
 
 	checkPaths($globalcfg['backupdir']);
 
@@ -367,9 +452,14 @@ else {
 		$hostcfg['address'] = trim(strval($hosts->address)); 
 		$hostcfg['protocol'] = trim(strtolower(strval($hosts->protocol))); 
 		$hostcfg['port'] = trim(strval($hosts->port));
-		$hostcfg['username'] = strval($hosts->username); 
-		$hostcfg['pass'] = strval($hosts->pass);
+		$hostcfg['username'] = strval($hosts->username);
 
+		if($globalcfg['encryptpass'] === "true"){		
+			$hostcfg['pass'] = decryptStr(strval($hosts->pass));
+		}
+		else {
+			$hostcfg['pass'] = strval($hosts->pass);
+		}
 		// Only backup enabled hosts
 		if ($hostcfg['enabled']  === "true") {
 
