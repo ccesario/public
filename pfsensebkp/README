@@ -58,6 +58,7 @@ USAGE:
 	- The log and backup files are stored in the directories specified in the configuration file.
 	- Make sure you have permission to read and write in backupdir and logdir directories.
 
+
 SECURITY:
 
 	To increase the security, is possible encrypt the password in XML config.
