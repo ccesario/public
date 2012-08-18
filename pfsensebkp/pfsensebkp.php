@@ -179,47 +179,47 @@ function printMessage($message)
 */
 function encryptStr($strPlain)
 {
-		global $privateKey;
-
-        $strCrypt = '';
-        $privateKeyCoded = base64_encode($privateKey);
-        $privateKeyCrypt = crypt($privateKey);
-        $strCrypt = strrev($strPlain);
-        $strCrypt = base64_encode($strCrypt);
-        $strCrypt = $strCrypt.$privateKeyCoded;
-        $strCrypt = base64_encode($strCrypt);
-        $strCrypt = $privateKeyCrypt.$strCrypt;
-        return $strCrypt;
+	global $privateKey;
+	
+	$strCrypt = '';
+	$privateKeyCoded = base64_encode($privateKey);
+	$privateKeyCrypt = crypt($privateKey);
+	$strCrypt = strrev($strPlain);
+	$strCrypt = base64_encode($strCrypt);
+	$strCrypt = $strCrypt.$privateKeyCoded;
+	$strCrypt = base64_encode($strCrypt);
+	$strCrypt = $privateKeyCrypt.$strCrypt;
+	return $strCrypt;
 }
 
 
 /**
- * decryptStr()
- * Function to decrypt ecrypted string
- *
- * @param string $strCrypt
- * @param global string $privateKey
- * @return string
+* decryptStr()
+* Function to decrypt ecrypted string
+*
+* @param string $strCrypt
+* @param global string $privateKey
+* @return string
 */
 function decryptStr($strCrypt)
 {
-		global $privateKey;
-
-        $strDecrypt = '';
-        $privateKeyCoded = base64_encode($privateKey);
-        $privateKeyCrypt = crypt($privateKey);
-        $strDecrypt = substr($strCrypt, strlen($privateKeyCrypt));
-        $strDecrypt = base64_decode($strDecrypt);
-        $strDecrypt = str_replace($privateKeyCoded,"",$strDecrypt);
-        $strDecrypt = base64_decode($strDecrypt);
-        $strDecrypt = strrev($strDecrypt);
-
-		if ($strDecrypt != '') {     
-			return $strDecrypt;
-		}
-		else {
-			return '[ERROR]';
-		}
+	global $privateKey;
+	
+	$strDecrypt = '';
+	$privateKeyCoded = base64_encode($privateKey);
+	$privateKeyCrypt = crypt($privateKey);
+	$strDecrypt = substr($strCrypt, strlen($privateKeyCrypt));
+	$strDecrypt = base64_decode($strDecrypt);
+	$strDecrypt = str_replace($privateKeyCoded,"",$strDecrypt);
+	$strDecrypt = base64_decode($strDecrypt);
+	$strDecrypt = strrev($strDecrypt);
+	
+	if ($strDecrypt != '') {     
+		return $strDecrypt;
+	}
+	else {
+		return '[ERROR] - Invalid encrypted password';
+	}
 }
 
 
