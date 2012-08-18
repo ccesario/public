@@ -194,12 +194,12 @@ function encryptStr($strPlain)
 
 
 /**
-* decryptStr()
-* Function to decrypt ecrypted string
-*
-* @param string $strCrypt
-* @param global string $privateKey
-* @return string
+ * decryptStr()
+ * Function to decrypt ecrypted string
+ *
+ * @param string $strCrypt
+ * @param global string $privateKey
+ * @return string
 */
 function decryptStr($strCrypt)
 {
