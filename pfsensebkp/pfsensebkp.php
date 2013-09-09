@@ -35,7 +35,7 @@
  * Program variables
 */
 $programExec 		= basename($_SERVER['argv'][0]);
-$programVersion 	= "0.1-beta 08-2012";
+$programVersion 	= "0.2 09-2013";
 $programAuthor 		= "Carlos Cesario <carloscesario@gmail.com>";
 $programName		= "pfsensebkp";	
 
@@ -126,6 +126,25 @@ function createLog($logMessage,$logDir)
 	fclose($fp);
 }
 
+/**
+ * deleteOlderFiles()
+ * Function to delete older files
+ *
+ * @param numeric $days Number of days before delete all files
+ * @param string  $datadir Data directory backup files
+ * @return none
+*/
+function deleteOlderFiles($days,$datadir)
+{
+	foreach (glob($datadir."/*.xml") as $file)
+	{
+		//delete if older
+		if (filemtime($file) <= (time()-($days*24*60*60)))
+		{
+			unlink($file);
+		}
+	}
+}
 
 /**
  * showHelp()
@@ -148,6 +167,7 @@ Usage: $programExec options
 	--debug                                 :: Debug backup process
 	--cryptpass   'the secure pass'         :: Encrypt password string - Used with <encryptpass> XML option
 	--decryptpass 'encrypted pass'          :: Decrypt encrypted password string
+	--deletedays  'number days'             :: Number days before delete older files
 ";
 
     echo $helpProgram;
@@ -414,6 +434,21 @@ if( $totalArgv > 1 ) {
 			}
 		break;
 
+		case '--deletedays':
+			if (!$argv[($param + 1)]) {
+					printMessage("--deletedays 'number days > 0'");
+					exit(1);
+			}
+			else {
+				$deletedays = trim($argv[($param + 1)]);
+				if (!is_numeric($deletedays)) {
+					printMessage("--deletedays param must be numeric value");
+					exit(1);
+				}
+				$param++;
+			}
+		break;
+
 		default:
 			showHelp();
 		break;
@@ -477,6 +512,12 @@ else {
 			else {
 				echo date('[D M j G:i:s]')." ${backup['error']}\n";
 				createLog("${backup['error']}",$globalcfg['logdir']);
+			}
+
+			// Delete Older Files
+			if ($deletedays > 0)
+			{
+					deleteOlderFiles($deletedays,$backupdir);
 			}
 		}
 	}
