@@ -10,7 +10,7 @@ $ldap_host = "192.168.1.1";
 $ldap_dn = "OU=INTERNET,DC=domain,DC=local";
 
 # BIND USER(required)
-$user_bind = "CN=Proxyauth,OU=PROXY,DC=domain,DC=local";
+$user_bind = "CN=Proxyauth,OU=PROXY,DC=domain,DC=com";
 
 # PASSWORD BIND(required)
 $password = "passwd";
