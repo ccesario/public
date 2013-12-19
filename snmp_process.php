@@ -73,9 +73,6 @@ function checkExtension($extName)
 
 function usage($msg = NULL)
 {
-
-if ( strlen($msg) )
-
 	$helpProgram = 
 PROGRAMNAME ." ". PROGRAMVERSION ." ". PROGRAMADATE . " - " .  PROGRAMAUTHOR . "
 
@@ -89,7 +86,9 @@ Usage: " . PROGRAMEXEC . " options
 ";
 
 	echo $helpProgram;
-	printMessage("$msg");
+
+	if (strlen($msg))
+		printMessage("$msg");
 
     exit(1);
 }
