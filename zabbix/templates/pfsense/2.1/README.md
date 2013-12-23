@@ -66,8 +66,8 @@ Items
 
 
 Discovery rules
-
 ---------------
+
 * **Disk partitions** 
 * **Network interfaces**
 * **Pf Interfaces**
