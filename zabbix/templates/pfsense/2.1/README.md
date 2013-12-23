@@ -62,3 +62,11 @@ Items
   * **sysLocation** => The physical location of this node (e.g, 'telephone closet, 3rd floor' ).
   * **sysName** => An administratively-assigned name for this managed node. By convention, this is the node's fully-qualified domain name.
   * **sysUptime** => The amount of time since this host was last initialized. Note that this is different from sysUpTime in the SNMPv2-MIB [RFC1907] because sysUpTime is the uptime of the network management portion of the system.
+
+
+
+Discovery rules
+---------------
+* **Disk partitions** 
+* **Network interfaces**
+* **Pf Interfaces**
