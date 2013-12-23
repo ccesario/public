@@ -66,7 +66,17 @@ Items
 
 
 Discovery rules
+
 ---------------
 * **Disk partitions** 
 * **Network interfaces**
 * **Pf Interfaces**
+
+
+Installation
+------------
+1. Enable SNMP service in PFsense host, define the **Read Community String** and active all modules (MibII, Netgraph, PF, Host Resources (Requires MibII), UCD, Regex).
+2. Import **template-pfsense21.xml** file into Zabbix.
+3. Add to your host the **{$SNMP_COMMUNITY}** macro with your SNMP community as value.
+4. Associate **Template PfSense 2.1** template to the host.
+5. Save, wait a few minutes and check **Recent Data**.
