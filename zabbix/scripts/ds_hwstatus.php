@@ -162,39 +162,39 @@ function powerFanStatus() {
 	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
 	
 	foreach ($scli as $value) {
-	$powerFanDetect = parserItem($patternPowerFan,$value);
-	if  ( $powerFanDetect ) {
-	//echo "Power Fan Detected $powerFanDetect\n";
-	break;
-	}
+		$powerFanDetect = parserItem($patternPowerFan,$value);
+		if  ( $powerFanDetect ) {
+			//echo "Power Fan Detected $powerFanDetect\n";
+			break;
+		}
 	}
 	
 	if ($powerFanDetect > 0) {
-	foreach ($scli as $value) {
-	$statPowerFan =  parserItem($patternPowerFanStatus,$value);
-	if  ( $statPowerFan ) {
-	$retstatPowerFan = $statPowerFan;
-	//echo "PowerFan status: $retstatPowerFan\n";
-	if (!preg_match("/(optimal)/i", $retstatPowerFan)) {
+		foreach ($scli as $value) {
+			$statPowerFan =  parserItem($patternPowerFanStatus,$value);
+			if  ( $statPowerFan ) {
+				$retstatPowerFan = $statPowerFan;
+				//echo "PowerFan status: $retstatPowerFan\n";
+				if (!preg_match("/(optimal)/i", $retstatPowerFan)) {
 	        $result = false;
 	        break;
-	}
-	else {
-	        $result = true;
-	}
-	}
-	}
+				}
+				else {
+					$result = true;
+				}
+			}
+		}
 	}
 	
 	if ($result == false)
-	echo STATUS_ERR . "Power Fan status ($retstatPowerFan)\n";
+		echo STATUS_ERR . "Power Fan status ($retstatPowerFan)\n";
 	else
-	echo STATUS_OK . "\n";
+		echo STATUS_OK . "\n";
 	
 	}
 	
 	
-	powerFanStatus();
+powerFanStatus();
 	
 	
 	
