@@ -8,7 +8,6 @@ error_reporting(E_ALL ^ E_NOTICE);
 $hostname = '192.168.1.1';
 
 
-
 define("PROGRAMVERSION", "0.1");
 define("PROGRAMADATE", "December 30, 2013");
 define("PROGRAMAUTHOR","Carlos Cesario <carloscesario@gmail.com>");
