@@ -153,90 +153,90 @@ batStatus();
 
 
 function powerFanStatus() {
-        $beginstr = 'ENCLOSURES----';
-        $endstr = '----';
-        $result = false;
-        $retstatPowerFan = null;
-        $patternPowerFan = "^Power-Fan (CRUs|CRUs\/FRUs|Canisters) Detected";
-        $patternPowerFanStatus = "^Power-fan (canister|CRU\/FRU) (.*) status";
-        $scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
-
-        foreach ($scli as $value) {
-                $powerFanDetect = parserItem($patternPowerFan,$value);
-                if  ( $powerFanDetect ) {
-                        //echo "Power Fan Detected $powerFanDetect\n";
-                        break;
-                }
-        }
-
-        if ($powerFanDetect > 0) {
-                foreach ($scli as $value) {
-                        $statPowerFan =  parserItem($patternPowerFanStatus,$value);
-                        if  ( $statPowerFan ) {
-                                $retstatPowerFan = $statPowerFan;
-                                //echo "PowerFan status: $retstatPowerFan\n";
-                                if (!preg_match("/(optimal)/i", $retstatPowerFan)) {
-                                        $result = false;
-                                        break;
-                                }
-                                else {
-                                        $result = true;
-                                }
-                        }
-                }
-        }
-
-        if ($result == false)
-                echo STATUS_ERR . "Power Fan status ($retstatPowerFan)\n";
-        else
-                echo STATUS_OK . "\n";
-
-}
-
-
-powerFanStatus();
-
-
-
+	$beginstr = 'ENCLOSURES----';
+	$endstr = '----';
+	$result = false;
+	$retstatPowerFan = null;
+	$patternPowerFan = "^Power-Fan (CRUs|CRUs\/FRUs|Canisters) Detected";
+	$patternPowerFanStatus = "^Power-fan (canister|CRU\/FRU) (.*) status";
+	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
+	
+	foreach ($scli as $value) {
+	$powerFanDetect = parserItem($patternPowerFan,$value);
+	if  ( $powerFanDetect ) {
+	//echo "Power Fan Detected $powerFanDetect\n";
+	break;
+	}
+	}
+	
+	if ($powerFanDetect > 0) {
+	foreach ($scli as $value) {
+	$statPowerFan =  parserItem($patternPowerFanStatus,$value);
+	if  ( $statPowerFan ) {
+	$retstatPowerFan = $statPowerFan;
+	//echo "PowerFan status: $retstatPowerFan\n";
+	if (!preg_match("/(optimal)/i", $retstatPowerFan)) {
+	        $result = false;
+	        break;
+	}
+	else {
+	        $result = true;
+	}
+	}
+	}
+	}
+	
+	if ($result == false)
+	echo STATUS_ERR . "Power Fan status ($retstatPowerFan)\n";
+	else
+	echo STATUS_OK . "\n";
+	
+	}
+	
+	
+	powerFanStatus();
+	
+	
+	
 function fanStatus() {
-        $beginstr = 'ENCLOSURES----';
-        $endstr = '----';
-        $result = false;
-        $retstatFan = null;
-        $patternFan = "^Fans Detected";
-        $patternFanStatus = "^Fan Status";
-        $scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
-
-        foreach ($scli as $value) {
-                $fanDetect = parserItem($patternFan,$value);
-                if  ( $fanDetect ) {
-                        //echo "Fan(s) Detected $fanDetect\n";
-                        break;
-                }
-        }
-
-        if ($fanDetect > 0) {
-                foreach ($scli as $value) {
-                        $statFan =  parserItem($patternFanStatus,$value);
-                        if  ( $statFan ) {
-                                $retstatFan = $statFan;
-                                //echo "Fan status: $retstatFan\n";
-                                if (!preg_match("/(optimal)/i", $retstatFan)) {
-                                        $result = false;
-                                        break;
-                                }
-                                else {
-                                        $result = true;
-                                }
-                        }
-                }
-        }
-
-        if ($result == false)
-                echo STATUS_ERR . "Fan status ($retstatFan)\n";
-        else
-                echo STATUS_OK . "\n";
-
+	$beginstr = 'ENCLOSURES----';
+	$endstr = '----';
+	$result = false;
+	$retstatFan = null;
+	$patternFan = "^Fans Detected";
+	$patternFanStatus = "^Fan Status";
+	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
+	
+	foreach ($scli as $value) {
+		$fanDetect = parserItem($patternFan,$value);
+		if  ( $fanDetect ) {
+			//echo "Fan(s) Detected $fanDetect\n";
+			break;
+		}
+	}
+	
+	if ($fanDetect > 0) {
+		foreach ($scli as $value) {
+			$statFan =  parserItem($patternFanStatus,$value);
+			if  ( $statFan ) {
+				$retstatFan = $statFan;
+				//echo "Fan status: $retstatFan\n";
+				if (!preg_match("/(optimal)/i", $retstatFan)) {
+					$result = false;
+					break;
+				}
+				else {
+					$result = true;
+				}
+			}
+		}
+	}
+	
+	if ($result == false)
+		echo STATUS_ERR . "Fan status ($retstatFan)\n";
+	else
+		echo STATUS_OK . "\n";
+	
 }
 
 
@@ -244,43 +244,43 @@ fanStatus();
 
 
 function tempStatus() {
-        $beginstr = 'ENCLOSURES----';
-        $endstr = '----';
-        $result = false;
-        $retstatTemp = null;
-        $patternTemp = "^Temperature Sensors Detected";
-        $patternTempStatus = "^Temperature sensor status";
-        $scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
-
-        foreach ($scli as $value) {
-                $tempDetect = parserItem($patternTemp,$value);
-                if  ( $tempDetect ) {
-                        //echo "Temperature Sensors Detected $tempDetect\n";
-                        break;
-                }
-        }
-
-        if ($tempDetect > 0) {
-                foreach ($scli as $value) {
-                        $statTemp =  parserItem($patternTempStatus,$value);
-                        if  ( $statTemp ) {
-                                $retstatTemp = $statTemp;
-                                //echo "Temperature sensor status: $retstatTemp\n";
-                                if (!preg_match("/(optimal)/i", $retstatTemp)) {
-                                        $result = false;
-                                        break;
-                                }
-                                else {
-                                        $result = true;
-                                }
-                        }
-                }
-        }
-
-        if ($result == false)
-                echo STATUS_ERR . "Temperature sensor status ($retstatTemp)\n";
-        else
-                echo STATUS_OK . "\n";
+	$beginstr = 'ENCLOSURES----';
+	$endstr = '----';
+	$result = false;
+	$retstatTemp = null;
+	$patternTemp = "^Temperature Sensors Detected";
+	$patternTempStatus = "^Temperature sensor status";
+	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
+	
+	foreach ($scli as $value) {
+		$tempDetect = parserItem($patternTemp,$value);
+		if  ( $tempDetect ) {
+			//echo "Temperature Sensors Detected $tempDetect\n";
+			break;
+		}
+	}
+	
+	if ($tempDetect > 0) {
+		foreach ($scli as $value) {
+			$statTemp =  parserItem($patternTempStatus,$value);
+			if  ( $statTemp ) {
+				$retstatTemp = $statTemp;
+				//echo "Temperature sensor status: $retstatTemp\n";
+				if (!preg_match("/(optimal)/i", $retstatTemp)) {
+					$result = false;
+					break;
+				}
+				else {
+					$result = true;
+				}
+			}
+		}
+	}
+	
+	if ($result == false)
+		echo STATUS_ERR . "Temperature sensor status ($retstatTemp)\n";
+	else
+		echo STATUS_OK . "\n";
 
 }
 
@@ -290,43 +290,43 @@ tempStatus();
 
 
 function sfpStatus() {
-        $beginstr = 'ENCLOSURES----';
-        $endstr = '----';
-        $result = false;
-        $retstatSfp = null;
-        $patternSfp = "^SFPs Detected";
-        $patternSfpStatus = "^SFP status";
-        $scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
-
-        foreach ($scli as $value) {
-                $sfpDetect = parserItem($patternSfp,$value);
-                if  ( $sfpDetect ) {
-                        //echo "SFPs Detected $sfpDetect\n";
-                        break;
-                }
-        }
-
-        if ($sfpDetect > 0) {
-                foreach ($scli as $value) {
-                        $statSfp =  parserItem($patternSfpStatus,$value);
-                        if  ( $statSfp ) {
-                                $retstatSfp = $statSfp;
-                                //echo "SFP status: $retstatSfp\n";
-                                if (!preg_match("/(optimal)/i", $retstatSfp)) {
-                                        $result = false;
-                                        break;
-                                }
-                                else {
-                                        $result = true;
-                                }
-                        }
-                }
-        }
-
-        if ($result == false)
-                echo STATUS_ERR . "SFP status ($retstatSfp)\n";
-        else
-                echo STATUS_OK . "\n";
+	$beginstr = 'ENCLOSURES----';
+	$endstr = '----';
+	$result = false;
+	$retstatSfp = null;
+	$patternSfp = "^SFPs Detected";
+	$patternSfpStatus = "^SFP status";
+	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
+	
+	foreach ($scli as $value) {
+		$sfpDetect = parserItem($patternSfp,$value);
+		if  ( $sfpDetect ) {
+			//echo "SFPs Detected $sfpDetect\n";
+			break;
+		}
+	}
+	
+	if ($sfpDetect > 0) {
+		foreach ($scli as $value) {
+			$statSfp =  parserItem($patternSfpStatus,$value);
+			if  ( $statSfp ) {
+				$retstatSfp = $statSfp;
+				//echo "SFP status: $retstatSfp\n";
+				if (!preg_match("/(optimal)/i", $retstatSfp)) {
+					$result = false;
+					break;
+				}
+					else {
+					$result = true;
+				}
+			}
+		}
+	}
+	
+	if ($result == false)
+		echo STATUS_ERR . "SFP status ($retstatSfp)\n";
+	else
+		echo STATUS_OK . "\n";
 
 }
 
@@ -335,43 +335,43 @@ sfpStatus();
 
 
 function powerSupplyStatus() {
-        $beginstr = 'ENCLOSURES----';
-        $endstr = '----';
-        $result = false;
-        $retstatPowerSupply = null;
-        $patternPowerSupply = "^Power Supplies Detected";
-        $patternPowerSupplyStatus = "^Power supply status";
-        $scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
-
-        foreach ($scli as $value) {
-                $powerSupplyDetect = parserItem($patternPowerSupply,$value);
-                if  ( $powerSupplyDetect ) {
-                        //echo "Power Supplies Detected $powerSupplyDetect\n";
-                        break;
-                }
-        }
-
-        if ($powerSupplyDetect > 0) {
-                foreach ($scli as $value) {
-                        $statPowerSupply =  parserItem($patternPowerSupplyStatus,$value);
-                        if  ( $statPowerSupply ) {
-                                $retstatPowerSupply = $statPowerSupply;
-                                //echo "Power supply status: $retstatPowerSupply\n";
-                                if (!preg_match("/(optimal)/i", $retstatPowerSupply)) {
-                                        $result = false;
-                                        break;
-                                }
-                                else {
-                                        $result = true;
-                                }
-                        }
-                }
-        }
-
-        if ($result == false)
-                echo STATUS_ERR . "Power supply status ($retstatPowerSupply)\n";
-        else
-                echo STATUS_OK . "\n";
+	$beginstr = 'ENCLOSURES----';
+	$endstr = '----';
+	$result = false;
+	$retstatPowerSupply = null;
+	$patternPowerSupply = "^Power Supplies Detected";
+	$patternPowerSupplyStatus = "^Power supply status";
+	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
+	
+	foreach ($scli as $value) {
+		$powerSupplyDetect = parserItem($patternPowerSupply,$value);
+		if  ( $powerSupplyDetect ) {
+			//echo "Power Supplies Detected $powerSupplyDetect\n";
+			break;
+		}
+	}
+	
+	if ($powerSupplyDetect > 0) {
+		foreach ($scli as $value) {
+			$statPowerSupply =  parserItem($patternPowerSupplyStatus,$value);
+			if  ( $statPowerSupply ) {
+				$retstatPowerSupply = $statPowerSupply;
+				//echo "Power supply status: $retstatPowerSupply\n";
+				if (!preg_match("/(optimal)/i", $retstatPowerSupply)) {
+					$result = false;
+					break;
+				}
+				else {
+					$result = true;
+				}
+			}
+		}
+	}
+	
+	if ($result == false)
+		echo STATUS_ERR . "Power supply status ($retstatPowerSupply)\n";
+	else
+		echo STATUS_OK . "\n";
 
 }
 
