@@ -428,8 +428,75 @@ function driveStatus() {
 		echo STATUS_OK . "\n";
 }
 
-
 driveStatus();
 
+function ldriveOwner() {
+	$beginstr = 'STANDARD LOGICAL DRIVES----';
+	$endstr = '----';
+	$result = false;
 
+	$retnameDrive = null;
+	$retstatDrive = null;
+
+	$patternNumLdrives = '^Number of standard logical drives';
+	$patternLDriveName = '^Logical Drive name';
+	$patternLDrivePowner = '^Preferred owner';
+	$patternLDriveCowner = '^Current owner';
+	$numArrays = 0;
+	$countArrays = 0;
+	$arr[] = null; 
+	$scli = execScli(PROGRAMCOMMAND, $beginstr, $endstr);
+
+
+	foreach ($scli as $value) {
+		$numLdrives = parserItem($patternNumLdrives,$value);
+		if  ( $numLdrives ) {
+			//echo "Number of logical drives $numLdrives\n";
+			break;
+		}
+	}
+
+	if ($numLdrives > 0) {
+		foreach ($scli as $value) {
+			$nameDrive = parserItem($patternLDriveName,$value);
+			if ($nameDrive) {
+				//echo "Logical Drive name: $retnameDrive\n";
+				$countArrays++;
+				$arr[$countArrays]["nome"] = $nameDrive;
+			}
+
+			$pOwnerDrive = parserItem($patternLDrivePowner,$value);
+			if ($pOwnerDrive) {
+				$arr[$countArrays]["pOwnerDrive"] = $pOwnerDrive;
+			}
+
+			$cOwnerDrive = parserItem($patternLDriveCowner,$value);
+			if ($cOwnerDrive) {
+				$arr[$countArrays]["cOwnerDrive"] = $cOwnerDrive;
+			}
+		}
+
+		foreach ($arr as $arrKey) {
+			//echo "$arrKey[nome]\n";
+			$retnameDrive = $arrKey["nome"];
+			$pOwnerDrive = trim($arrKey["pOwnerDrive"]);
+			$cOwnerDrive = trim($arrKey["cOwnerDrive"]);
+
+			if  ( $cOwnerDrive != $pOwnerDrive) {
+				$result = false;
+				break;
+			}
+			else {
+				$result = true;
+			}
+		}
+	}
+
+	if ($result == false)
+		echo STATUS_ERR . "Logical Drive Not On Preferred Path (last seen: $retnameDrive | Current Path: $cOwnerDrive :: Preferred Path: $pOwnerDrive)\n";
+	else
+		echo STATUS_OK . "\n";
+}
+
+ldriveOwner();
 ?>
