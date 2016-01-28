@@ -1,0 +1,16 @@
+#!/bin/bash
+# Ubuntu Openstack config wrapper, based on https://github.com/redhat-openstack/openstack-utils/blob/master/utils/openstack-config
+
+check_dep() {
+  local r
+  r=$(dpkg -S crudini > /dev/null 2>&1)
+  if [ $? -ne 0 ]; then
+    echo "Please install crudini program"
+    echo "    apt-get install crudini"
+    exit 1
+  fi
+}
+
+check_dep
+
+exec crudini "$@"
