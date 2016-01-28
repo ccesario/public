@@ -47,199 +47,197 @@ dpkg -l memcached > /dev/null 2>&1 && memcached='memcached'
 
 
 if test "$qpidd" && test "$rabbitmq"; then
-  # Give preference to rabbit
-  # Unless nova is installed and qpid is specifed
-  if test "$nova" && grep -q '^rpc_backend.*qpid' /etc/nova/nova.conf; then
-    rabbitmq=''
-  else
-    qpidd=''
-  fi
+    # Give preference to rabbit
+    # Unless nova is installed and qpid is specifed
+    if test "$nova" && grep -q '^rpc_backend.*qpid' /etc/nova/nova.conf; then
+        rabbitmq=''
+    else
+        qpidd=''
+    fi
 fi
 
 
 service_installed() {
-  service $1 status >//dev/null 2>&1
+    service $1 status >//dev/null 2>&1
 }
 
 
 lsb_to_string() {
-  case $1 in
-  0) echo "active" ;;
-  1) echo "dead" ;;
-  2) echo "dead" ;;
-  3) echo "inactive" ;;
-  *) echo "unknown" ;;
-  esac
+    case $1 in
+        0) echo "active" ;;
+        1) echo "dead" ;;
+        2) echo "dead" ;;
+        3) echo "inactive" ;;
+        *) echo "unknown" ;;
+    esac
 }
 
 
 
 check_svc() {
 
-  printf '%-40s' "$1:"
-
-  status=$(service $1 status >/dev/null 2>/dev/null ; lsb_to_string $?)
-
-  printf "%-${status_pad}s%s\n" "$status" "$bootstatus"
+    printf '%-40s' "$1:"
+    status=$(service $1 status >/dev/null 2>/dev/null ; lsb_to_string $?)
+    printf "%-${status_pad}s%s\n" "$status" "$bootstatus"
 }
 
 
 if test "$nova"; then
-  printf "== Nova services ==\n"
-  for nova_opt in cert conductor volume cells console consoleauth xvpvncproxy novncproxy spiceproxy serialproxy; do
-    service_installed nova-$nova_opt && nova_opt_inst="$nova_opt_inst $nova_opt"
-  done
-  for svc in api compute network scheduler $nova_opt_inst; do check_svc "nova-$svc"; done
+    printf "== Nova services ==\n"
+    for nova_opt in cert conductor volume cells console consoleauth xvpvncproxy novncproxy spiceproxy serialproxy; do
+        service_installed nova-$nova_opt && nova_opt_inst="$nova_opt_inst $nova_opt"
+    done
+    for svc in api compute network scheduler $nova_opt_inst; do check_svc "nova-$svc"; done
 fi
 
 
 if test "$glance"; then
-  printf "== Glance services ==\n"
-  for svc in api registry; do check_svc "glance-$svc"; done
+    printf "== Glance services ==\n"
+    for svc in api registry; do check_svc "glance-$svc"; done
 fi
 
 if test "$keystone"; then
-  printf "== Keystone service ==\n"
-  for svc in $keystone; do check_svc "$svc"; done
+    printf "== Keystone service ==\n"
+    for svc in $keystone; do check_svc "$svc"; done
 fi
 
 if test "$horizon"; then
-  printf "== Horizon service ==\n"
-  horizon_status="$(curl -L -s -w '%{http_code}\n' http://localhost/horizon -o /dev/null)"
-  [ "$horizon_status" = 200 ] && horizon_status=active
-  [ "$horizon_status" = 000 ] && horizon_status=uncontactable
-  printf '%-40s%s\n' "openstack-dashboard:" "$horizon_status"
+    printf "== Horizon service ==\n"
+    horizon_status="$(curl -L -s -w '%{http_code}\n' http://localhost/horizon -o /dev/null)"
+    [ "$horizon_status" = 200 ] && horizon_status=active
+    [ "$horizon_status" = 000 ] && horizon_status=uncontactable
+    printf '%-40s%s\n' "openstack-dashboard:" "$horizon_status"
 fi
 
 
 if test "$neutron"; then
-  printf "== $neutron services ==\n"
-  for svc in $neutron-server; do check_svc "$svc"; done
-  # Default agents
-  for agent in dhcp l3 metadata lbaas; do
-    service_installed $neutron-$agent-agent &&
-    check_svc "$neutron-$agent-agent"
-  done
-  # Optional plugins
-  for agent in openvswitch linuxbridge ryu nec mlnx metering; do
-    service_installed $neutron-plugin-$agent-agent &&
-    check_svc "$neutron-plugin-$agent-agent"
-  done
+    printf "== $neutron services ==\n"
+    for svc in $neutron-server; do check_svc "$svc"; done
+    # Default agents
+    for agent in dhcp l3 metadata lbaas; do
+        service_installed $neutron-$agent-agent &&
+        check_svc "$neutron-$agent-agent"
+    done
+    # Optional plugins
+    for agent in openvswitch linuxbridge ryu nec mlnx metering; do
+        service_installed $neutron-plugin-$agent-agent &&
+        check_svc "$neutron-plugin-$agent-agent"
+    done
 fi
 
 
 if test "$swift"; then
-  printf "== Swift services ==\n"
-  check_svc swift-proxy
-  for ringtype in account container object; do
-    check_svc swift-$ringtype
-    for service in replicator updater auditor; do
-      if [ $ringtype != 'account' ] || [ $service != 'updater' ]; then
-        : # TODO how to check status of:
-          # swift-init $ringtype-$service
-      fi
+    printf "== Swift services ==\n"
+    check_svc swift-proxy
+    for ringtype in account container object; do
+        check_svc swift-$ringtype
+        for service in replicator updater auditor; do
+            if [ $ringtype != 'account' ] || [ $service != 'updater' ]; then
+                # TODO how to check status of:
+                # swift-init $ringtype-$service
+            fi
+        done
     done
-  done
 fi
 
 
 if test "$cinder"; then
-  printf "== Cinder services ==\n"
-  service_installed cinder-backup && backup=backup
-  for service in api scheduler volume $backup; do
-    check_svc cinder-$service
-  done
+    printf "== Cinder services ==\n"
+    service_installed cinder-backup && backup=backup
+    for service in api scheduler volume $backup; do
+        check_svc cinder-$service
+    done
 fi
 
 if test "$ceilometer"; then
-  printf "== Ceilometer services ==\n"
-  service_installed ceilometer-agent-central && central=agent-central
-  service_installed ceilometer-agent-compute && compute=agent-compute
-  service_installed ceilometer-agent-ipmi && ipmi=agent-ipmi
-  service_installed ceilometer-agent-notification && notification=agent-notification
-  service_installed ceilometer-alarm-evaluator && evaluator=alarm-evaluator
-  service_installed ceilometer-alarm-notifier && notifier=alarm-notifier
-  service_installed ceilometer-api && api=api
-  service_installed ceilometer-collector && collector=collector
-
-  for service in api collector agent-central agent-compute agent-ipmi agent-notification alarm-evaluator alarm-notifier; do
-    check_svc ceilometer-$service
-  done
+    printf "== Ceilometer services ==\n"
+    service_installed ceilometer-agent-central && central=agent-central
+    service_installed ceilometer-agent-compute && compute=agent-compute
+    service_installed ceilometer-agent-ipmi && ipmi=agent-ipmi
+    service_installed ceilometer-agent-notification && notification=agent-notification
+    service_installed ceilometer-alarm-evaluator && evaluator=alarm-evaluator
+    service_installed ceilometer-alarm-notifier && notifier=alarm-notifier
+    service_installed ceilometer-api && api=api
+    service_installed ceilometer-collector && collector=collector
+    
+    for service in api collector agent-central agent-compute agent-ipmi agent-notification alarm-evaluator alarm-notifier; do
+        check_svc ceilometer-$service
+    done
 fi
 
 if test "$heat"; then
-  printf "== Heat services ==\n"
-  for service in api api-cfn api-cloudwatch engine; do
-    check_svc heat-$service
-  done
+    printf "== Heat services ==\n"
+    for service in api api-cfn api-cloudwatch engine; do
+        check_svc heat-$service
+    done
 fi
 
 if test "$sahara"; then
-  printf "== Sahara services ==\n"
-  if service_enabled 'sahara-engine'; then
-    sahara_services='api engine'
-  elif service_enabled 'sahara-api'; then
-    sahara_services='api'
-  else
-    sahara_services='all'
-  fi
-  for service in $sahara_services; do
-    check_svc sahara-$service
-  done
+    printf "== Sahara services ==\n"
+    if service_enabled 'sahara-engine'; then
+        sahara_services='api engine'
+    elif service_enabled 'sahara-api'; then
+        sahara_services='api'
+    else
+        sahara_services='all'
+    fi
+    for service in $sahara_services; do
+        check_svc sahara-$service
+    done
 fi
 
 if test "$trove"; then
-  printf "== Trove services ==\n"
-  for service in api taskmanager conductor; do
-    check_svc trove-$service
-  done
+    printf "== Trove services ==\n"
+    for service in api taskmanager conductor; do
+        check_svc trove-$service
+    done
 fi
 
 if test "$ironic"; then
-  printf "== Ironic services ==\n"
-  for service in api conductor; do
-    check_svc ironic-$service
-  done
+    printf "== Ironic services ==\n"
+    for service in api conductor; do
+        check_svc ironic-$service
+    done
 fi
 
 
 
 printf "== Support services ==\n"
 for svc in $mysqld $libvirtd $openvswitch $target $qpidd $rabbitmq $memcached; do
-  check_svc "$svc"
+    check_svc "$svc"
 done
 
 if test "$keystone"; then
-  printf "== Keystone users ==\n"
-  if ! test "$OS_USERNAME"; then
-    echo "Warning keystonerc not sourced" >&2
-  else
-    keystonerc=1
-    openstack user list
-  fi
+    printf "== Keystone users ==\n"
+    if ! test "$OS_USERNAME"; then
+        echo "Warning keystonerc not sourced" >&2
+    else
+        keystonerc=1
+        openstack user list
+    fi
 fi
 
 if test "$keystonerc" && test "$glance"; then
-  printf "== Glance images ==\n"
-  openstack image list
+    printf "== Glance images ==\n"
+    openstack image list
 fi
 
 if test "$nova"; then
-  if ! test "$keystonerc" && ! test "$NOVA_USERNAME"; then
-    test "$keystone" || echo "Warning novarc not sourced" >&2
-  else
-    printf "== Nova managed services ==\n"
-    nova service-list
-
-    printf "== Nova networks ==\n"
-    nova network-list
-
-    printf "== Nova instance flavors ==\n"
-    # Check direct access
-    nova flavor-list
-
-    printf "== Nova instances ==\n"
-    # Check access through the API
-    nova list --all-tenants # instances
-  fi
+    if ! test "$keystonerc" && ! test "$NOVA_USERNAME"; then
+        test "$keystone" || echo "Warning novarc not sourced" >&2
+    else
+        printf "== Nova managed services ==\n"
+        nova service-list
+        
+        printf "== Nova networks ==\n"
+        nova network-list
+        
+        printf "== Nova instance flavors ==\n"
+        # Check direct access
+        nova flavor-list
+        
+        printf "== Nova instances ==\n"
+        # Check access through the API
+        nova list --all-tenants # instances
+    fi
 fi
