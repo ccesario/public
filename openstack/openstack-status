@@ -134,7 +134,7 @@ if test "$swift"; then
         for service in replicator updater auditor; do
             if [ $ringtype != 'account' ] || [ $service != 'updater' ]; then
                 # TODO how to check status of:
-                # swift-init $ringtype-$service
+                :# swift-init $ringtype-$service
             fi
         done
     done
